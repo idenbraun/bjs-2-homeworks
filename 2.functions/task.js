@@ -1,24 +1,64 @@
-function getArrayParams(...arr) {
+//Задача № 1
+function cachingDecoratorNew(func) {
+	let cache = [];
 
-  return { min: min, max: max, avg: avg };
+	function wrapper(...args) {
+		let hash = md5(args);
+
+		let objectIbCache = cache.find(item => item.hash === hash);
+
+		if (objectIbCache) {
+			console.log("Из кеша: " + objectIbCache.value);
+			return "Из кеша: " + objectIbCache.value;
+		}
+
+		let result = func(...args);
+
+		cache.push({
+			hash: hash,
+			value: result
+		});
+
+		if (cache.length > 5) {
+			cache.shift();
+		}
+
+		console.log("Вычисляем: " + result);
+		return "Вычисляем: " + result;
+	}
+
+	return wrapper;
 }
 
-function summElementsWorker(...arr) {
+//Задача № 2
+function debounceDecoratorNew(func, delay) {
+	let timeoutId;
+	let firstCall = true;
 
-}
+	function wrapper(...args) {
+		wrapper.allCount++;
 
-function differenceMaxMinWorker(...arr) {
+		if (firstCall) {
+			firstCall = false;
 
-}
+			func.call(this, ...args);
+			wrapper.count++;
 
-function differenceEvenOddWorker(...arr) {
+			return;
+		}
 
-}
+		clearTimeout(timeoutId);
 
-function averageEvenElementsWorker(...arr) {
+		timeoutId = setTimeout(() => {
+			func.call(this, ...args);
+			wrapper.count++;
 
-}
+			timeoutId = null;
+		}, delay);
+	}
 
-function makeWork (arrOfArr, func) {
+	wrapper.count = 0;
+	wrapper.allCount = 0;
 
+	return wrapper;
 }
