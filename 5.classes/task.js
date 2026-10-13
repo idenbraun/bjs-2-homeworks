@@ -90,3 +90,26 @@ class Library {
     return book;
   }
 }
+
+const testLibrary = new Library("Тестовая библиотека");
+
+testLibrary.addBook(new NovelBook("Герберт Уэллс", "Машина времени", 1895, 138));
+testLibrary.addBook(new Magazine("Мурзилка", 1924, 60));
+
+let book1919 = testLibrary.findBookBy("releaseDate", 1919);
+if (!book1919) {
+	book1919 = new DetectiveBook("Агата Кристи", "Таинственное происшествие в Стайлзе", 1919, 296);
+	testLibrary.addBook(book1919);
+}
+
+const givenBook = testLibrary.giveBookByName(book1919.name);
+console.log("Выдана книга: " + givenBook.name);
+
+givenBook.state = 20;
+console.log("Состояние после повреждения: " + givenBook.state);
+
+givenBook.fix();
+console.log("Состояние после восстановления: " + givenBook.state);
+
+testLibrary.addBook(givenBook);
+console.log("Книга добавлена обратно: " + testLibrary.books.includes(givenBook));
